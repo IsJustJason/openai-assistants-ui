@@ -2,6 +2,8 @@ window.onload = function() {
     document.getElementById('user-input').focus();
 };
 
+let currentThreadId = null; // Variable to store the current thread ID
+
 function showLoadingOnButton() {
     const sendButton = document.getElementById('send-btn');
     sendButton.innerHTML = '<div class="loader"></div>'; // Replace button text with loader
@@ -52,8 +54,9 @@ function addToChatHistory(role, message) {
 document.getElementById('send-btn').addEventListener('click', function() {
     var userInputField = document.getElementById('user-input');
     var userInput = userInputField.value;
-    var threadDisplayText = document.getElementById('thread-id').innerText;
-    var threadId = threadDisplayText.includes("None") ? "" : threadDisplayText.split(": ")[1];
+    // var threadDisplayText = document.getElementById('thread-id').innerText; 
+    // var threadId = threadDisplayText.includes("None") ? "" : threadDisplayText.split(": ")[1];
+    var threadId = currentThreadId; // Get the current thread ID
 
     if (!threadId) {
         // If no thread ID, create a new thread first
@@ -61,7 +64,7 @@ document.getElementById('send-btn').addEventListener('click', function() {
         .then(response => response.json())
         .then(data => {
             if(data.thread_id) {
-                document.getElementById('thread-id').innerText = `Thread ID: ${data.thread_id}`;
+                // document.getElementById('thread-id').innerText = `Thread ID: ${data.thread_id}`;
                 sendUserInput(data.thread_id, userInput); // Send the user input after creating the thread
             } else {
                 document.getElementById('logs').innerText = 'Error creating thread';
@@ -91,8 +94,8 @@ document.getElementById('new-thread-btn').addEventListener('click', function() {
     fetch('/create_thread')
     .then(response => response.json())
     .then(data => {
-        if(data.thread_id) {
-            document.getElementById('thread-id').innerText = `Thread ID: ${data.thread_id}`;
+        if (data.thread_id) {
+            currentThreadId = data.thread_id; // Update the thread ID in JavaScript
             // Clearing out the user input, response area, and thread history
             document.getElementById('user-input').value = '';
             document.getElementById('logs').innerText = '';
