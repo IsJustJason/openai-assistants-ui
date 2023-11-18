@@ -2,25 +2,25 @@
 
 This project is a web-based chat interface that allows users to interact with OpenAI's assistant API. It features a modern, responsive UI and includes functionalities like function calling, creating new chat threads, sending messages, and displaying AI responses. It was created to put the assistant function calling into practice and to provide a simple interface for users to interact with the API.
 
+https://github.com/IsJustJason/openai-assistants-ui/assets/44307756/85c98335-a05a-4929-a699-b46fc44274d0
+
 ## Features
 
 - Function calling.
 - Create new chat threads.
-- Send messages and receive AI responses.
+- Send messages and receive assistant responses.
 - Display conversation history.
 - Modern and responsive user interface.
 
-## TODO
+## TODO/Wishlist
 
-Asssitants picker
-
-Thread viewer/save with summary title
-
-Format responses if they contain code blocks
-
-File upload
-
-Function calls get displayed in chat history
+- Asssitants picker
+- Thread viewer/save with summary title
+- Format responses if they contain code blocks
+- File upload
+- Function calls get displayed in chat history
+- Potential confirmation from user when running functions
+- Secrets functionality for better authenication
 
 ## Technology Stack
 
@@ -38,6 +38,9 @@ Function calls get displayed in chat history
 - OpenAI API key
 
 ### Installation
+
+#### Note
+   The current repo contains a function that runs a command on a remote device. Your assistant must have this function in order for it to work. The username and password environment vars are also needed only if you intend to use this function.
 
 1. **Clone the Repository**
 
@@ -57,13 +60,13 @@ Function calls get displayed in chat history
 
 4. **Set Up Environment Variables**
    ```bash
-   OPENAI_API_KEY=your_api_key_here
+   export OPENAI_API_KEY=your_api_key_here
 
-   OPENAI_ASSISTANT_ID=your_assistant_id_here
+   export OPENAI_ASSISTANT_ID=your_assistant_id_here
 
-   USERNAME_ENV_VAR=your_username_here
+   export USERNAME_ENV_VAR=your_username_here
 
-   PASSWORD_ENV_VAR=your_password_here
+   export PASSWORD_ENV_VAR=your_password_here
 
 5. **Setup Assistant and Functions**
 
