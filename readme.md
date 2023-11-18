@@ -2,7 +2,7 @@
 
 This project is a web-based chat interface that allows users to interact with OpenAI's assistant API. It features a modern, responsive UI and includes functionalities like function calling, creating new chat threads, sending messages, and displaying AI responses. It was created to put the assistant function calling into practice and to provide a simple interface for users to interact with the API.
 
-https://github.com/IsJustJason/openai-assistants-ui/assets/44307756/85c98335-a05a-4929-a699-b46fc44274d0
+![openai-assistants-ui](https://github.com/IsJustJason/openai-assistants-ui/assets/44307756/21ec0ffc-30f2-426c-b4c1-8de1ec4eeb2a)
 
 ## Features
 
@@ -21,6 +21,8 @@ https://github.com/IsJustJason/openai-assistants-ui/assets/44307756/85c98335-a05
 - Function calls get displayed in chat history
 - Potential confirmation from user when running functions
 - Secrets functionality for better authenication
+- Microphone voice input
+- Voice playback
 
 ## Technology Stack
 
