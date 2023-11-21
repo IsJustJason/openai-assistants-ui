@@ -62,7 +62,7 @@ body, html {
     gap: 10px; /* Adds space between the buttons */
 }
 
-#send-btn, #new-thread-btn {
+#send-btn, #new-thread-btn, #voice-input-btn {
     flex: 1; /* Each button will take up an equal amount of space */
     padding: 10px 20px; /* Adjust padding to your liking */
     margin: 10px 0; /* Retain the margin for spacing */
@@ -81,7 +81,7 @@ body, html {
     align-items: center;
 }
 
-#send-btn:hover, #new-thread-btn:hover {
+#send-btn:hover, #new-thread-btn:hover, #voice-input-btn:hover {
     background-color: #3949ab; /* Retain the hover effect */
 }
 
@@ -124,4 +124,69 @@ body, html {
     height: 16px; /* Adjust to fit within button */
     animation: spin 2s linear infinite;
 }
-  
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.voice-recording {
+    animation: pulse 1s infinite;
+}
+
+input[type="file"]#file-input,
+button,
+#file-input-label {
+    margin: 10px 0;
+    padding: 10px 20px; /* Example padding, adjust as needed */
+    font-size: 16px; /* Example font size, adjust as needed */
+    line-height: 1.5; /* Adjust line height as needed */
+    border: 2px solid transparent; /* Adjust or remove border as needed */
+    border-radius: 8px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-flex; /* Use flex to center content */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    vertical-align: middle; /* Aligns the element baseline */
+    background-color: #5c6bc0;
+    color: white;
+}
+
+input[type="file"]#file-input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#file-input-label {
+    margin-left: 10px; /* Space between this label and other elements */
+    background-color: #FFC107; /* Example color, adjust as needed */
+}
+
+button:hover,
+#file-input-label:hover {
+    background-color: #3949ab; /* Darken button on hover */
+}
+
+/* Example classes for other buttons for consistency */
+button {
+    background-color: #5c6bc0;
+    /* Rest of your button styles */
+}
+
+

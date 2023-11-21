@@ -33,8 +33,9 @@ def ask_openai():
     data = request.json
     thread_id = data.get('thread_id')
     user_input = data.get('input')
+    user_files = data.get('file_ids')
     # Ensure user input is provided
-    if not user_input:
+    if not user_input and not user_files:
         return jsonify("No input provided"), 400
     if thread_id == 'None':
         return jsonify("No thread provided"), 400
@@ -44,6 +45,7 @@ def ask_openai():
         thread_id,
         role="user",
         content=user_input,
+        file_ids=user_files
         )
         # Run assistant on thread
         run = openai.beta.threads.runs.create(
@@ -85,6 +87,7 @@ def ask_openai():
 
         return jsonify(msgs.data[0].content[0].text.value)
     except Exception as e:
+        print(str(e))
         return jsonify(str(e)), 500
 
 # Route to fetch thread messages
@@ -103,6 +106,33 @@ def get_thread_messages():
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500
+
+@app.route('/upload_file', methods=['POST'])
+def upload_file():
+    list_files = []
+    for uploaded_file in request.files.getlist('files'):
+        print("Uploading file: " + uploaded_file.filename)
+        try:
+            # Read the file content
+            file_content = uploaded_file.read()
+
+            # Upload the file to OpenAI
+            openai_file = openai.files.create(
+                file=file_content,
+                purpose="assistants"
+            )
+
+            list_files.append(openai_file.id)
+
+            # Attach the file to the assistant
+            # assistant_file = openai.beta.assistants.files.create(
+            #     assistant_id="asst_abc123",  # Replace with your assistant's ID
+            #     file_id=file_id
+            # )
+        except Exception as e:
+            print(str(e))
+            return jsonify({"error": str(e)}), 500
+    return jsonify({"file_id": list_files}), 200
 
 
     

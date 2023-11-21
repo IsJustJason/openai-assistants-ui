@@ -17,7 +17,7 @@ function hideLoadingOnButton() {
 }
 
 // Function to send user input to the backend
-function sendUserInput(threadId, userInput) {
+function sendUserInput(threadId, userInput, files=[]) {
     // Show loading indicator while waiting for the response
     showLoadingOnButton();
     // Immediately display the user's message in the chat history
@@ -28,7 +28,7 @@ function sendUserInput(threadId, userInput) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input: userInput, thread_id: threadId }),
+        body: JSON.stringify({ input: userInput, thread_id: threadId, file_ids: files }),
     })
     .then(response => response.json())
     .then(data => {
@@ -54,6 +54,10 @@ function addToChatHistory(role, message) {
 document.getElementById('send-btn').addEventListener('click', function() {
     var userInputField = document.getElementById('user-input');
     var userInput = userInputField.value;
+    var fileInput = document.getElementById('file-input');
+    if (!userInput && fileInput.files.length === 0) {
+        return; // If no user input and no files, do nothing
+    }
     // var threadDisplayText = document.getElementById('thread-id').innerText; 
     // var threadId = threadDisplayText.includes("None") ? "" : threadDisplayText.split(": ")[1];
     var threadId = currentThreadId; // Get the current thread ID
@@ -65,7 +69,23 @@ document.getElementById('send-btn').addEventListener('click', function() {
         .then(data => {
             if(data.thread_id) {
                 // document.getElementById('thread-id').innerText = `Thread ID: ${data.thread_id}`;
-                sendUserInput(data.thread_id, userInput); // Send the user input after creating the thread
+                currentThreadId = data.thread_id; // Update the thread ID in JavaScript
+                if (fileInput.files.length > 0) {
+                    var files = fileInput.files;
+                    uploadFile(files).then(fileIds => {
+                        // add filenames to chat history
+                        for (let i = 0; i < fileIds.length; i++) {
+                            addToChatHistory('User', `File uploaded: ${fileInput.files[i].name}`);
+                        }
+                        // Once the file is uploaded, send the user input along with the file IDs
+                        sendUserInput(data.thread_id, userInput, fileIds); // Send the user input after creating the thread
+                    }).finally(() => {
+                        // Clear the file input after processing
+                        resetFileInputLabel();
+                    });
+                } else {
+                    sendUserInput(data.thread_id, userInput); // Send the user input after creating the thread
+                }
             } else {
                 document.getElementById('logs').innerText = 'Error creating thread';
             }
@@ -75,12 +95,54 @@ document.getElementById('send-btn').addEventListener('click', function() {
             document.getElementById('logs').innerText = 'Error creating thread';
         });
     } else {
-        sendUserInput(threadId, userInput); // Send the user input with existing thread ID
+        if (fileInput.files.length > 0) {
+            var files = fileInput.files;
+            // add filenames to chat history
+            for (let i = 0; i < fileIds.length; i++) {
+                addToChatHistory('User', `File uploaded: ${fileInput.files[i].name}`);
+            }
+            uploadFile(files).then(fileIds => {
+                // Once the file is uploaded, send the user input along with the file IDs
+                sendUserInput(currentThreadId, userInput, fileIds); // Send the user input after creating the thread
+            }).finally(() => {
+                // Clear the file input after processing
+                resetFileInputLabel();
+            });
+        } else {
+            sendUserInput(currentThreadId, userInput); // Send the user input with existing thread ID and no files
+        }
     }
 
     // Clear the user input field after the message has been sent
     userInputField.value = '';
 });
+
+function uploadFile(file) {
+    return new Promise((resolve, reject) => {
+        let formData = new FormData();
+        const input = document.getElementById('file-input');
+        for (let i = 0; i < input.files.length; i++) {
+            formData.append('files', input.files[i]);
+        }
+        fetch('/upload_file', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.file_id) {
+                resolve(data.file_id);
+            } else {
+                reject("File upload failed");
+            }
+        })
+        .catch(error => {
+            console.error('Error uploading file:', error);
+            reject(error);
+        });
+    });
+}
+
 
 
 document.getElementById('user-input').addEventListener('keypress', function(event) {
@@ -139,4 +201,51 @@ function fetchThreadMessages(threadId) {
         console.error('Error:', error);
         document.getElementById('messages-container').innerText = 'Error fetching messages.';
     });
+}
+
+// Check if the browser supports speech recognition
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+
+    // Add the voice-recording class when recognition starts
+    document.getElementById('voice-input-btn').addEventListener('click', function() {
+        recognition.start();
+        this.classList.add('voice-recording'); // Start the animation
+    });
+
+    // Remove the voice-recording class when recognition ends
+    recognition.onend = function() {
+        document.getElementById('voice-input-btn').classList.remove('voice-recording'); // Stop the animation
+    };
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('user-input').value = transcript;
+        //sendUserInput(transcript); // Function to handle sending of the input
+    };
+
+    // Add error handling for recognition errors
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        document.getElementById('voice-input-btn').classList.remove('voice-recording'); // Stop the animation in case of error
+    };
+} else {
+    document.getElementById('voice-input-btn').style.display = 'none'; // Hide the button if not supported
+}
+
+// Change file input label when files are selected
+document.getElementById('file-input').addEventListener('change', function() {
+    var label = document.getElementById('file-input-label');
+    var fileCount = this.files.length;
+    label.textContent = `📂 ${fileCount} File${fileCount !== 1 ? 's' : ''}`;
+});
+
+// function to reset file input label
+function resetFileInputLabel() {
+    var label = document.getElementById('file-input-label');
+    label.textContent = '📂 0 Files';
 }
