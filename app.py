@@ -63,24 +63,22 @@ def ask_openai():
             if run.status == 'requires_action':
                 print(run.required_action.submit_tool_outputs.tool_calls)
                 # Switch case for functions
-                match run.required_action.submit_tool_outputs.tool_calls[0].function.name: # TODO add loop for parallel function calls, instead of assuming only one
-                    case 'run_command': # Match for run_command function
-                        args = json.loads(run.required_action.submit_tool_outputs.tool_calls[0].function.arguments) # Load arguments passed from the assistant
-                        function_value = run_command(args['hostname'], args['command'])
-                    case _:
-                        function_value = 'Function does not exist'
+                function_list = []
+                for action in run.required_action.submit_tool_outputs.tool_calls:
+                    match action.function.name:
+                        case 'run_command': # Match for run_command function
+                            args = json.loads(action.function.arguments) # Load arguments passed from the assistant
+                            function_return = {"tool_call_id": action.id, "output": run_command(args['hostname'], args['command'])}
+                            function_list.append(function_return)
+                        case _:
+                            function_return = 'Function does not exist'
                 # Submit function output
                 run = openai.beta.threads.runs.submit_tool_outputs(
                     thread_id=thread_id,
                     run_id=run.id,
-                    tool_outputs=[
-                        {
-                            "tool_call_id": run.required_action.submit_tool_outputs.tool_calls[0].id,
-                            "output": function_value,
-                        }
-                        ]
+                    tool_outputs=function_list
                     )
-            time.sleep(.2)
+            time.sleep(.2) # Sleep and check run status again
 
         msgs = openai.beta.threads.messages.list(thread_id)
         #msgs.data[0].content[0].text.value

@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>OpenAI Assistant</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div id="chat-container">
+    <div id="chat-container">        
         <div id="thread-history">
             <h3>Chat History</h3>
             <div id="messages-container"></div>
