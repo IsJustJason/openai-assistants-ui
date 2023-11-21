@@ -13,6 +13,7 @@ body, html {
 #chat-container {
     width: 100%; /* Increase width */
     max-width: 1200px; /* Increase max-width for larger screens */
+    max-height: 100vh; /* 100% of the viewport height */
     height: auto; /* Adjust height to auto for natural expansion */
     min-height: 600px; /* Minimum height to ensure container visibility */
     margin: 2% auto; /* Add some margin at the top and bottom */
@@ -28,6 +29,7 @@ body, html {
 
 #thread-history {
     flex-grow: 1;
+    max-height: 400px; /* or any other value that fits well in your layout */
     overflow-y: auto;
     margin: 20px 0; /* Add more vertical space */
     padding: 20px; /* Increase padding for spacing */
@@ -189,4 +191,15 @@ button {
     /* Rest of your button styles */
 }
 
+pre, code {
+    background-color: #858585;
+    border-radius: 4px;
+    /* padding: 0.5em; */
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap; /* For <code> in case of long lines */
+}
 
+pre {
+    padding: 1em;
+    overflow-x: auto; /* For very long lines in code blocks */
+}

@@ -47,6 +47,10 @@ function sendUserInput(threadId, userInput, files=[]) {
 function addToChatHistory(role, message) {
     const messagesContainer = document.getElementById('messages-container');
     const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-message');
+    if (role === 'Assistant') {
+        message = formatAssistantResponse(message); // Format the message if it's from the assistant
+    }
     messageDiv.innerHTML = `<strong>${role}:</strong> ${message}`;
     messagesContainer.appendChild(messageDiv);
 }
@@ -248,4 +252,18 @@ document.getElementById('file-input').addEventListener('change', function() {
 function resetFileInputLabel() {
     var label = document.getElementById('file-input-label');
     label.textContent = '📂 0 Files';
+}
+
+function formatAssistantResponse(responseText) {
+    // First, replace triple backtick blocks with <pre><code> tags
+    let formattedText = responseText.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>');
+
+    // Then, replace single backticks with <code> tags for inline code
+    // Ensure we don't touch already replaced triple backticks code blocks
+    formattedText = formattedText.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Convert line breaks to <br> tags for the remaining text
+    formattedText = formattedText.replace(/\n/g, '<br>');
+
+    return formattedText;
 }

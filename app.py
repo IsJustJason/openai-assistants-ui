@@ -79,6 +79,7 @@ def ask_openai():
                     tool_outputs=function_list
                     )
             time.sleep(.2) # Sleep and check run status again
+        print('Run Status: ' + run.status)
 
         msgs = openai.beta.threads.messages.list(thread_id)
         #msgs.data[0].content[0].text.value
