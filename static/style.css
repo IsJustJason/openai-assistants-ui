@@ -17,7 +17,6 @@ body, html {
     height: auto; /* Adjust height to auto for natural expansion */
     min-height: 600px; /* Minimum height to ensure container visibility */
     margin: 2% auto; /* Add some margin at the top and bottom */
-    text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -25,6 +24,14 @@ body, html {
     background-color: #202124;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     padding: 20px;
+}
+
+.User {
+    color: green;
+}
+
+.Assistant {
+    color: red;
 }
 
 #thread-history {

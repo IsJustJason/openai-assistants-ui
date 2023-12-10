@@ -51,7 +51,8 @@ function addToChatHistory(role, message) {
     if (role === 'Assistant') {
         message = formatAssistantResponse(message); // Format the message if it's from the assistant
     }
-    messageDiv.innerHTML = `<strong>${role}:</strong> ${message}`;
+    let roleClass = role === 'User' ? 'User' : 'Assistant';
+    messageDiv.innerHTML = `<strong class="${roleClass}">${role}</strong> :${message}`;
     messagesContainer.appendChild(messageDiv);
 }
 
