@@ -70,6 +70,26 @@ def ask_openai():
                             args = json.loads(action.function.arguments) # Load arguments passed from the assistant
                             function_return = {"tool_call_id": action.id, "output": run_command(args['hostname'], args['command'])}
                             function_list.append(function_return)
+                        case 'print_working_dir_files': 
+                            args = json.loads(action.function.arguments) # Load arguments passed from the assistant
+                            # if args['path'] exists, use it, otherwise use empty string
+                            if 'path' in args:
+                                function_return = {"tool_call_id": action.id, "output": print_working_dir_files(args['path'])}
+                                print(function_return)
+                            else:
+                                function_return = {"tool_call_id": action.id, "output": print_working_dir_files()}
+                                print(function_return)
+                            function_list.append(function_return)
+                        case 'read_file':
+                            args = json.loads(action.function.arguments) # Load arguments passed from the assistant
+                            function_return = {"tool_call_id": action.id, "output": read_file(args['path'])}
+                            print(function_return)
+                            function_list.append(function_return)
+                        case 'write_file':
+                            args = json.loads(action.function.arguments) # Load arguments passed from the assistant
+                            function_return = {"tool_call_id": action.id, "output": write_file(args['path'], args['contents'])}
+                            print(function_return)
+                            function_list.append(function_return)
                         case _:
                             function_return = 'Function does not exist'
                 # Submit function output
@@ -169,6 +189,46 @@ def run_command(hostname, command):
     finally:
         # Close the SSH client
         ssh_client.close()
+
+# Given a path, return string of files and directories
+def print_working_dir_files(path=""):
+    # If path is empty, set it to the current directory
+    if path == "":
+        path = os.getcwd()
+    # if absolute path, it must contain openai-assistants-ui
+    if path[0] == "/":
+        if "openai-assistants-ui" not in path:
+            return "Invalid path"
+    # Initialize empty dict
+    files = {}
+    # Loop through files in the given path
+    for file in os.listdir(path):
+        # If file is a directory, add it to the dict
+        if os.path.isdir(os.path.join(path, file)):
+            files[file] = "directory"
+        # If file is a file, add it to the dict
+        elif os.path.isfile(os.path.join(path, file)):
+            files[file] = "file"
+    return str(files)
+
+# Read contents of a given file path and return them
+def read_file(path):
+    try:
+        file = open(path, "r")
+        return file.read()
+    except Exception as e:
+        print(str(e))
+        return str(e)
+    
+# Write contents to a given file path and return success or failure message
+def write_file(path, contents):
+    try:
+        file = open(path, "w")
+        file.write(contents)
+        return "Success"
+    except Exception as e:
+        print(str(e))
+        return str(e)
 
 # Run the Flask app
 if __name__ == '__main__':

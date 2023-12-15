@@ -52,9 +52,23 @@ function addToChatHistory(role, message) {
         message = formatAssistantResponse(message); // Format the message if it's from the assistant
     }
     let roleClass = role === 'User' ? 'User' : 'Assistant';
-    messageDiv.innerHTML = `<strong class="${roleClass}">${role}</strong> :${message}`;
+    messageDiv.innerHTML = `<strong class="${roleClass}">${role}</strong>: ${message}`;
     messagesContainer.appendChild(messageDiv);
 }
+
+function adjustLayout() {
+    var chatHistory = document.getElementById('chat-history');
+    var inputArea = document.getElementById('input-area');
+
+    if (chatHistory.scrollHeight > window.innerHeight) {
+        inputArea.style.position = 'static';
+    } else {
+        inputArea.style.position = 'sticky';
+    }
+}
+
+// Call adjustLayout whenever new messages are added or the window is resized
+window.addEventListener('resize', adjustLayout);
 
 document.getElementById('send-btn').addEventListener('click', function() {
     var userInputField = document.getElementById('user-input');
