@@ -43,6 +43,11 @@ function sendUserInput(threadId, userInput, files=[]) {
     });
 }
 
+function formatMessage(message) {
+    // Replace spaces with &nbsp; and newlines with <br>
+    return message.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>');
+}
+
 // Function to add messages to the chat history
 function addToChatHistory(role, message) {
     const messagesContainer = document.getElementById('messages-container');
@@ -51,9 +56,14 @@ function addToChatHistory(role, message) {
     if (role === 'Assistant') {
         message = formatAssistantResponse(message); // Format the message if it's from the assistant
     }
+    else if (role === 'User') {
+        message = formatMessage(message);
+    }
     let roleClass = role === 'User' ? 'User' : 'Assistant';
     messageDiv.innerHTML = `<strong class="${roleClass}">${role}</strong>: ${message}`;
     messagesContainer.appendChild(messageDiv);
+    // Scroll to the latest message
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 function adjustLayout() {
