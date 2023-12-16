@@ -16,12 +16,11 @@ https://github.com/IsJustJason/openai-assistants-ui/assets/44307756/44dbde56-d22
 
 - Asssitants picker
 - Thread viewer/save with summary title
-- Format responses if they contain code blocks
-- File upload
+- File attachment to assistant
 - Function calls get displayed in chat history
 - Potential confirmation from user when running functions
 - Secrets functionality for better authenication
-- Microphone voice input
+- Microphone voice input(Work in Progress)
 - Voice playback
 
 ## Technology Stack
@@ -42,7 +41,7 @@ https://github.com/IsJustJason/openai-assistants-ui/assets/44307756/44dbde56-d22
 ### Installation
 
 #### Note
-   The current repo contains a function that runs a command on a remote device. Your assistant must have this function in order for it to work. The username and password environment vars are also needed only if you intend to use this function.
+   The current repo contains a function that runs a command on a remote device. Your assistant must have this function in order for it to use it. The username and password environment vars are also needed only if you intend to use this function.
 
 1. **Clone the Repository**
 
@@ -86,7 +85,7 @@ https://github.com/IsJustJason/openai-assistants-ui/assets/44307756/44dbde56-d22
    
    Your prompt will be sent to the AI and the AI's response will be displayed in the chat history.
    
-   Any functions that are called will be ran and the result will be displayed in the chat history.
+   Any functions that are called will be ran and the AI response will be displayed in the chat history.
    
    Click the "New Chat" button to start a new chat thread and wipe history.
    
