@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>OpenAI Assistant</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-    <div id="chat-container">        
+    <div id="chat-container">
         <div id="thread-history">
             <h3>Chat History</h3>
             <div id="messages-container"></div>
@@ -16,12 +18,9 @@
         <div id="button-container">
             <button id="new-thread-btn">New Chat</button>
             <button id="send-btn">Send</button>
-            <button id="voice-input-btn">🎤</button>
-            <input type="file" id="file-input" multiple style="display: none;" />
-            <label for="file-input" id="file-input-label">📂 0 Files</label>
-        </div>        
-        <div id="logs"></div>
+        </div>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+
 </html>

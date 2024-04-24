@@ -33,9 +33,8 @@ def ask_openai():
     data = request.json
     thread_id = data.get('thread_id')
     user_input = data.get('input')
-    user_files = data.get('file_ids')
     # Ensure user input is provided
-    if not user_input and not user_files:
+    if not user_input:
         return jsonify("No input provided"), 400
     if thread_id == 'None':
         return jsonify("No thread provided"), 400
@@ -44,8 +43,7 @@ def ask_openai():
         thread_message = openai.beta.threads.messages.create(
         thread_id,
         role="user",
-        content=user_input,
-        file_ids=user_files
+        content=user_input
         )
         # Run assistant on thread
         run = openai.beta.threads.runs.create(
