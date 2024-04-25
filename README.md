@@ -104,3 +104,18 @@ https://github.com/IsJustJason/openai-assistants-ui/assets/44307756/44dbde56-d22
    OpenAI for providing the Assistants API.
    All contributors who participate in this project.
 
+## Docker
+
+Run the following commands:
+
+```
+docker build --no-cache  -t web-app .
+docker run -d -p 8000:8000 --name web-app web-app
+docker logs -f web-app
+```
+
+Delete the container:
+
+```
+docker stop web-app && docker rm web-app
+```
